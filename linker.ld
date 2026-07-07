@@ -6,7 +6,7 @@ SECTIONS
 	.text : 
 	{ 
 		KEEP(*(.text.boot))
-		*(.text) 
+		*(.text*) 
 	}
 	.rodata :
 	{
@@ -24,7 +24,7 @@ SECTIONS
 		. = ALIGN(8);
 		__bss_end = .;
 	}
-	/* 每次function call都要存frame pointer 跟return addr這兩個pointer, 1個pointer 8byte所以要對其16 */
+	/* 每次function call都要存兩個pointer, 1個pointer 8byte所以要對其16 */
 	. = ALIGN(16);
-	__stack_top = . + 0x4000
+	__stack_top = . + 0x4000;
 }
