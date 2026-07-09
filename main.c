@@ -3,9 +3,14 @@
 int main()
 {
 	uart_init();
-	uart_send_string("Hello world!");
+	uart_send('O');
+	uart_send('K');
+	
 
-	while(1){};
+	while(1)
+	{
+		uart_send(uart_recv());
+	};
 	
 	return 0;
 }

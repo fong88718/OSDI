@@ -7,7 +7,7 @@ obj = start.o main.o uart.o
 
 CFLAGS = -Wall -O3 -ffreestanding -nostdlib -nostartfiles
 
-.PHONY: all clean run
+.PHONY: all clean run asm debug
 
 all : kernel8.img
 
@@ -24,6 +24,12 @@ kernel8.img: $(obj)
 clean:
 	rm -rf *.o *.img *.elf
 
-run:
+asm:
 	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -display none -d in_asm
+
+run:  
+	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -nographic -serial null -serial mon:stdio
+
+debug:
+	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -display none -S -s
 
