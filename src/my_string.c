@@ -112,3 +112,62 @@ char *dtoa(double value, char *buffer)
     *out = '\0';
     return result;
 }
+
+unsigned int vsprintf(char *dst, char *fmt, __builtin_va_list args) 
+{
+    char *dst_orig = dst;
+    while (*fmt) 
+    {
+        if (*fmt == '%') 
+        {
+            fmt++;
+            // escape %
+            if (*fmt == '%') 
+            {
+                goto put;
+            }
+            // string
+            else if (*fmt == 's') 
+            {
+                char *p = __builtin_va_arg(args, char *);
+                while (*p) 
+                    *dst++ = *p++;
+            }
+            // number
+            else if (*fmt == 'd') 
+            {
+                int arg = __builtin_va_arg(args, int);
+                char buf[12];
+                char *p = itoa(arg, buf);
+                while (*p) {
+                    *dst++ = *p++;
+                }
+            }
+            // float
+            else if (*fmt == 'lf' || *fmt == 'f') 
+            {
+                double arg = (double) __builtin_va_arg(args, double);
+                char buf[20];  // sign + 10 int + dot + 7 float
+                char *p = dtoa(arg, buf);
+                while (*p) 
+                    *dst++ = *p++;
+            }
+        } 
+        else 
+        {
+        put:
+            *dst++ = *fmt;
+        }
+        fmt++;
+    }
+    *dst = '\0';
+
+    return dst - dst_orig;  // return written bytes
+}
+
+unsigned int sprintf(char *dst, char *fmt, ...) 
+{
+    __builtin_va_list args;
+    __builtin_va_start(args, fmt);
+    return vsprintf(dst, fmt, args);
+}

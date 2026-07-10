@@ -1,6 +1,7 @@
 #include "uart.h"
 #include "aux.h"
 #include "gpio.h"
+#include "my_string.h"
 
 void uart_init(void) 
 {
@@ -47,14 +48,6 @@ char uart_recv(void)
     return c == '\r' ? '\n' : c;
 }
 
-void uart_send_string(char *s) 
-{
-    while(*s != 0)
-    {
-        uart_send(*s++);
-    }   
-}
-
 void delay(int time)
 {
     while(time-- > 0)
@@ -65,4 +58,14 @@ void uart_flush()
 {
     while (*AUX_MU_LSR_REG & 0x01) 
         *AUX_MU_IO_REG;
+}
+
+void uart_printf(char *fmt, ...)
+{
+    __builtin_va_list args;
+    __builtin_va_start(args, fmt);
+    char output[100], *s = output;
+    vsprintf(s, fmt, args);
+    while(*s != 0)
+        uart_send(*s++);
 }

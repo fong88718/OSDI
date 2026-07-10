@@ -1,6 +1,5 @@
 #include "uart.h"
 #include "shell.h"
-#include "my_string.h"
 
 #define CMD_SIZE 128
 
@@ -12,7 +11,6 @@ enum shellStatus {
 int main()
 {
 	shell_init();
-	uart_send_string("Hello RASPI3b+\n");
 	char cmd[CMD_SIZE];
 	enum shellStatus status = Read;
 	while(1)
@@ -31,6 +29,5 @@ int main()
 				break;
 		}
 	};
-	
 	return 0;
 }
