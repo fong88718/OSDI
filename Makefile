@@ -45,5 +45,8 @@ run: all
 debug: all
 	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -display none -S -s
 
+tty: all
+	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -serial pty
+
 print:
 	
