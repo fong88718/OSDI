@@ -24,7 +24,7 @@ SECTIONS
 		. = ALIGN(8);
 		__bss_end = .;
 	}
-	/* 每次function call都要存兩個pointer, 1個pointer 8byte所以要對其16 */
+	/* AAPCS64 ABI 規定stack pointer要對齊16 */
 	. = ALIGN(16);
 	__stack_top = . + 0x4000;
 }

@@ -34,28 +34,35 @@ void uart_init(void)
 
 void uart_send(char c)
 {
-    while((*AUX_MU_LSR_REG & (1 << 5)) == 0)
+    while((*AUX_MU_LSR_REG & (1 << 5)) == 0) // tx queue is full
         asm volatile("nop");
     *AUX_MU_IO_REG = c;
 }
 
 char uart_recv(void) 
 {
-    while((*AUX_MU_LSR_REG & 1) == 0)
+    while((*AUX_MU_LSR_REG & 1) == 0) // rx queue is full
         asm volatile("nop");
-    return (char)*AUX_MU_IO_REG;
+    char c = (char)*AUX_MU_IO_REG;
+    return c == '\r' ? '\n' : c;
 }
 
 void uart_send_string(char *s) 
 {
     while(*s != 0)
+    {
         uart_send(*s++);
+    }   
 }
-
-
 
 void delay(int time)
 {
     while(time-- > 0)
         asm volatile("nop");
+}
+
+void uart_flush() 
+{
+    while (*AUX_MU_LSR_REG & 0x01) 
+        *AUX_MU_IO_REG;
 }

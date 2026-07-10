@@ -26,6 +26,7 @@ clear_done:
 	// set stack pointer
 	ldr x0, =__stack_top
 	mov sp, x0
+
 	// jump to main function in c
 	bl main
 	// halt this core if return
