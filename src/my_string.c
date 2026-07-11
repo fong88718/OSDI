@@ -113,6 +113,38 @@ char *dtoa(double value, char *buffer)
     return result;
 }
 
+char* hextoa(unsigned int arg, char *buf)
+{
+    unsigned char *byte = (unsigned char*)&arg;
+    char *p = buf;
+
+    for(int i = 0 ; i < 4 ; i++)
+    {
+        int low = *byte & 0xF;
+        int high = (*byte >> 4) & 0xF;
+
+        
+        if(low < 10)
+            *p++ = '0' + low;
+        else
+            *p++ = 'a' + low - 10;
+        
+        if(high < 10)
+            *p++ = '0' + high;
+        else
+            *p++ = 'a' + high - 10;
+        
+        byte++;
+    }
+    for(int i = 0 ; i < 4 ; i++)
+    {
+        char tmp = buf[i];
+        buf[i] = buf[7-i];
+        buf[7-i] = tmp;
+    }
+    *p = 0;
+    return buf;
+}
 unsigned int vsprintf(char *dst, char *fmt, __builtin_va_list args) 
 {
     char *dst_orig = dst;
@@ -144,11 +176,19 @@ unsigned int vsprintf(char *dst, char *fmt, __builtin_va_list args)
                 }
             }
             // float
-            else if (*fmt == 'lf' || *fmt == 'f') 
+            else if (*fmt == 'f') 
             {
                 double arg = (double) __builtin_va_arg(args, double);
                 char buf[20];  // sign + 10 int + dot + 7 float
                 char *p = dtoa(arg, buf);
+                while (*p) 
+                    *dst++ = *p++;
+            }
+            else if(*fmt == 'x')
+            {
+                unsigned int arg = __builtin_va_arg(args, unsigned int);
+                char buf[9];
+                char *p = hextoa(arg, buf);
                 while (*p) 
                     *dst++ = *p++;
             }

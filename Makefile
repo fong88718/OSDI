@@ -15,7 +15,7 @@ ENTRY_OBJ := $(OUT_DIR)/start.o
 SRCS := $(wildcard $(SRC_DIR)/*.c)
 OBJS := $(SRCS:$(SRC_DIR)/%.c=$(OUT_DIR)/%.o) 
 
-CFLAGS := -g -Wall -O0 -ffreestanding -nostdlib -nostartfiles -I include  -mstrict-align
+CFLAGS := -g -Wall -O0 -ffreestanding -nostdlib -nostartfiles -I include 
 
 .PHONY: all clean run asm debug print
 

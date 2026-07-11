@@ -2,6 +2,7 @@
 #include "uart.h"
 #include "my_string.h"
 #include "util.h"
+#include "mailbox.h"
 
 enum ANSI_ESC {
     Unknown,
@@ -136,6 +137,10 @@ void shell_parse(char *cmd)
         reset(100);
         while(1)
             asm volatile("nop");
+    }
+    else if(strcmp(cmd, "test") == 0)
+    { 
+        get_board_revision();
     }
     else
     {
