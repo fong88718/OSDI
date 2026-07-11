@@ -141,6 +141,7 @@ void shell_parse(char *cmd)
     else if(strcmp(cmd, "test") == 0)
     { 
         get_board_revision();
+        get_VC_Core_base_address();
     }
     else
     {
