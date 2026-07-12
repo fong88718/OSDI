@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ==========================
 # Build output
 # ==========================
@@ -43,3 +44,25 @@ out/
 # Logs
 # ==========================
 *.log
+=======
+# Build output
+out/
+
+# ELF/Binary
+*.elf
+*.img
+*.bin
+*.map
+
+# Temporary
+*.o
+*.d
+*.swp
+*~
+
+# VSCode
+.vscode/
+
+# macOS
+.DS_Store
+>>>>>>> origin/Lab2

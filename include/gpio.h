@@ -2,7 +2,7 @@
 #define GPIO_H
 
 #include "mmio.h"
-#define GPIO_BASE 0X200000
+#define GPIO_BASE (MMIO_BASE + 0x200000)
 
 #define GPFSEL0     ((volatile unsigned int*)(GPIO_BASE + 0x00))
 #define GPFSEL1     ((volatile unsigned int*)(GPIO_BASE + 0x04))
