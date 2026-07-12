@@ -144,7 +144,7 @@ unsigned int vsprintf(char *dst, char *fmt, __builtin_va_list args)
                 }
             }
             // float
-            else if (*fmt == 'lf' || *fmt == 'f') 
+            else if (*fmt == 'f') 
             {
                 double arg = (double) __builtin_va_arg(args, double);
                 char buf[20];  // sign + 10 int + dot + 7 float
