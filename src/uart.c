@@ -35,6 +35,8 @@ void uart_init(void)
 
 void uart_send(char c)
 {
+    if(c == '\n') 
+        uart_send('\r');
     while((*AUX_MU_LSR_REG & (1 << 5)) == 0) // tx queue is full
         asm volatile("nop");
     *AUX_MU_IO_REG = c;
