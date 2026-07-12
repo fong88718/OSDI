@@ -1,5 +1,5 @@
 #include "shell.h"
-#include "uart.h"
+#include "uart0.h"
 #include "my_string.h"
 #include "util.h"
 #include "mailbox.h"

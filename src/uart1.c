@@ -1,9 +1,9 @@
-#include "uart.h"
+#include "uart1.h"
 #include "aux.h"
 #include "gpio.h"
 #include "my_string.h"
 
-void uart_init(void) 
+void uart1_init(void) 
 {
     /* Initialized GPIO */
     // GPIO pins should be set up first before enable UART. (Page 10)
@@ -33,14 +33,14 @@ void uart_init(void)
     *AUX_MU_CNTL_REG = 3;       // enable tx/rx
 }
 
-void uart_send(char c)
+void uart1_send(char c)
 {
     while((*AUX_MU_LSR_REG & (1 << 5)) == 0) // tx queue is full
         asm volatile("nop");
     *AUX_MU_IO_REG = c;
 }
 
-char uart_recv(void) 
+char uart1_recv(void) 
 {
     while((*AUX_MU_LSR_REG & 1) == 0) // rx queue is full
         asm volatile("nop");
@@ -54,18 +54,18 @@ void delay(int time)
         asm volatile("nop");
 }
 
-void uart_flush() 
+void uart1_flush() 
 {
     while (*AUX_MU_LSR_REG & 0x01) 
         *AUX_MU_IO_REG;
 }
 
-void uart_printf(char *fmt, ...)
+void uart1_printf(char *fmt, ...)
 {
     __builtin_va_list args;
     __builtin_va_start(args, fmt);
     char output[100], *s = output;
     vsprintf(s, fmt, args);
     while(*s != 0)
-        uart_send(*s++);
+        uart1_send(*s++);
 }

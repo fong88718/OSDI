@@ -1,4 +1,3 @@
-#include "uart.h"
 #include "shell.h"
 
 #define CMD_SIZE 128
