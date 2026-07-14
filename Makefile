@@ -37,16 +37,16 @@ clean:
 	rm -rf $(OUT_DIR) kernel8.*
 
 asm: all
-	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -display none -d in_asm
+	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -display none -d in_asm
 
 run: all
-	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -display none -serial null  -serial stdio
+	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -display none -serial stdio
 
 debug: all
-	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -display none -S -s
+	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -display none -S -s
 
 tty: all
-	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -serial pty
+	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -serial pty
 
 print:
 	

@@ -1,9 +1,8 @@
 #include "uart0.h"
 #include "mailbox.h"
-
-#include "aux.h"
 #include "gpio.h"
 #include "my_string.h"
+#include "util.h"
 
 
 
@@ -67,12 +66,6 @@ char uart_recv(void)
         asm volatile("nop");
     char c = (char)*UART0_DR;
     return c == '\r' ? '\n' : c;
-}
-
-static void delay(int time)
-{
-    while(time-- > 0)
-        asm volatile("nop");
 }
 
 void uart_flush() 

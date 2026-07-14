@@ -1,7 +1,8 @@
 #include "uart1.h"
-#include "aux.h"
+#include "auxi.h"
 #include "gpio.h"
 #include "my_string.h"
+#include "util.h"
 
 void uart1_init(void) 
 {
@@ -36,7 +37,7 @@ void uart1_init(void)
 void uart1_send(char c)
 {
     if(c == '\n') 
-        uart_send('\r');
+        uart1_send('\r');
     while((*AUX_MU_LSR_REG & (1 << 5)) == 0) // tx queue is full
         asm volatile("nop");
     *AUX_MU_IO_REG = c;
@@ -50,11 +51,7 @@ char uart1_recv(void)
     return c == '\r' ? '\n' : c;
 }
 
-void delay(int time)
-{
-    while(time-- > 0)
-        asm volatile("nop");
-}
+
 
 void uart1_flush() 
 {

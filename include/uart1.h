@@ -5,7 +5,7 @@
 void uart1_init(void);
 void uart1_send(char c);
 char uart1_recv();
-void delay(int time);
+
 void uart1_flush();
 void uart1_printf(char *fmt, ...); 
 

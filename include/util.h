@@ -5,5 +5,7 @@
 void reset(int tick);
 void cancel_reset();
 double getTimeStamp();
+void delay(int time);
+
 
 #endif

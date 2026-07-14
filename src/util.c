@@ -23,3 +23,9 @@ double getTimeStamp()
     asm volatile("mrs %0, CNTPCT_EL0" : "=r"(cnt));
     return 1.0 * cnt / freq;
 }
+
+void delay(int time)
+{
+    while(time-- > 0)
+        asm volatile("nop");
+}
