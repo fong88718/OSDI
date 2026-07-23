@@ -1,5 +1,5 @@
 #include "shell.h"
-
+#include "uart0.h"
 #define CMD_SIZE 128
 
 enum shellStatus {
