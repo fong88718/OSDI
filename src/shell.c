@@ -3,7 +3,7 @@
 #include "my_string.h"
 #include "util.h"
 #include "mailbox.h"
-
+#include "frame_buffer.h"
 
 enum ANSI_ESC {
     Unknown,
@@ -39,16 +39,24 @@ enum ANSI_ESC decode_ansi_escape()
 
 void shell_init()
 {
+    // Initialize uart
     uart_init();
-    
-    uart_printf("\rHello RASPI3b+\r\n");
-    get_board_revision();
-    get_VC_Core_base_address();
+    uart_flush();
+    uart_printf("\n[%f] Init PL011 UART done", getTimeStamp());
 
+    // Initialize Frame Buffer
+    fb_init();
+    uart_printf("\n[%f] Init Frame Buffer done", getTimeStamp());
+    
+    // Welcome Messages
+    fb_splash();
     uart_printf("\n\n\r _  _  ___ _____ _   _  ___  ___ ___ ___ \n");
     uart_printf("\r| \\| |/ __|_   _| | | |/ _ \\/ __|   \\_ _|\n");
     uart_printf("\r| .` | (__  | | | |_| | (_) \\__ \\ |) | | \n");
     uart_printf("\r|_|\\_|\\___| |_|  \\___/ \\___/|___/___/___|\n\n");
+    get_board_revision();
+    get_VC_Core_base_address();
+    uart_printf("\n");
 }
 
 void shell_read(char *cmd)
