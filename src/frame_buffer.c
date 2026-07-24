@@ -61,9 +61,9 @@ void fb_init()
     // tags end
     mailbox[34] = END_TAG;
 
-    mailbox_call(mailbox, 8); // message passing procedure call, you should implement it following the 6 steps provided above.
+    int ok = mailbox_call(mailbox, 8); // message passing procedure call, you should implement it following the 6 steps provided above.
 
-    if(mailbox[20] == 32 && mailbox[28] != 0)
+    if(ok && mailbox[20] == 32 && mailbox[28] != 0)
     {
         fb = (unsigned char*)(unsigned long)(mailbox[28] & 0x3FFFFFFF);  // convert GPU address to ARM address
         width = mailbox[5];

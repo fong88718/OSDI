@@ -14,9 +14,11 @@ void get_board_revision()
     // tags end
     mailbox[6] = END_TAG;
 
-    mailbox_call(mailbox, 8); // message passing procedure call, you should implement it following the 6 steps provided above.
-
-    uart_printf("\r0x%x\n", mailbox[5]); // it should be 0xa020d3 for rpi3 b+
+    int ok = mailbox_call(mailbox, 8); // message passing procedure call, you should implement it following the 6 steps provided above.
+    if(ok)
+        uart_printf("\r0x%x\n", mailbox[5]); // it should be 0xa020d3 for rpi3 b+
+    else    
+        uart_printf("Fail to get board revision!\n");
 }
 
 void get_VC_Core_base_address()
@@ -33,9 +35,11 @@ void get_VC_Core_base_address()
     // tags end
     mailbox[7] = END_TAG;
 
-    mailbox_call(mailbox, 8); // message passing procedure call, you should implement it following the 6 steps provided above.
-
-    uart_printf("\rbase 0x%x + size 0x%x\n", mailbox[5], mailbox[6]);
+    int ok = mailbox_call(mailbox, 8); // message passing procedure call, you should implement it following the 6 steps provided above.
+    if(ok)
+        uart_printf("\rbase 0x%x + size 0x%x\n", mailbox[5], mailbox[6]);
+    else
+        uart_printf("Fail to get VC Core base address!\n");
 }
 
 int mailbox_call(unsigned int *mailbox, int channel)
