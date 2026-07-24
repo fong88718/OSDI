@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(sort -k6)",
+      "Bash(gh api *)",
+      "Bash([ -f \"$F\" ])",
+      "Bash(readelf -s C:/Users/m45p9/Desktop/ShareDir/example/osdi2020/bootloader/kernel8.elf)",
+      "Bash(objdump -s -j .got C:/Users/m45p9/Desktop/ShareDir/example/osdi2020/bootloader/kernel8.elf)",
+      "Bash(objdump -d C:/Users/m45p9/Desktop/ShareDir/example/osdi2020/bootloader/kernel8.elf)",
+      "Bash(echo \"exit=$?  lines=$\\(wc -l < /tmp/dis.txt\\)\")",
+      "Read(//tmp/**)",
+      "Bash(readelf -x .got C:/Users/m45p9/Desktop/ShareDir/example/osdi2020/bootloader/kernel8.elf)"
+    ]
+  }
+}

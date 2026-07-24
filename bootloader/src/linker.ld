@@ -1,12 +1,18 @@
+ENTRY(_relocate)
+
 SECTIONS
 {
   	. = 0x80000;
+	.relocate :
+	{
+		KEEP(*(.text.relocate))
+	}
+
+	. = ALIGN(4096);
 	_begin = .;
 	.text : 
 	{ 
 		KEEP(*(.text.boot))
-		_start_loadimg_offset = .;
-		*(.text.start_loading)
 		*(.text*) 
 	}
 	.rodata :
@@ -25,10 +31,6 @@ SECTIONS
 		. = ALIGN(8);
 		__bss_end = .;
 	}
-	/* AAPCS64 ABI 規定stack pointer要對齊16 */
-	. = ALIGN(16);
-	__stack_bottom = .;
-	. = . + 0x4000;
-	__stack_top = .;
 	_end = .;
 }
+_boot_loader = 0x3B3FC000; /*VC Core Base 位址: 0x3B400000 - 16KB*/

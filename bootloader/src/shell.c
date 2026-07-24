@@ -3,7 +3,7 @@
 #include "my_string.h"
 #include "util.h"
 #include "mailbox.h"
-
+#include "loadimg.h"
 
 enum ANSI_ESC {
     Unknown,
@@ -41,20 +41,22 @@ void shell_init()
 {
     uart_init();
     
-    uart_printf("\rHello RASPI3b+\r\n");
+    uart_printf("Hello RASPI3b+\r\n");
     get_board_revision();
     get_VC_Core_base_address();
 
-    uart_printf("\n\n\r _  _  ___ _____ _   _  ___  ___ ___ ___ \n");
-    uart_printf("\r| \\| |/ __|_   _| | | |/ _ \\/ __|   \\_ _|\n");
-    uart_printf("\r| .` | (__  | | | |_| | (_) \\__ \\ |) | | \n");
-    uart_printf("\r|_|\\_|\\___| |_|  \\___/ \\___/|___/___/___|\n\n");
+    
+    uart_printf("\n\n ____              _     _                    _           \n");
+    uart_printf("| __ )  ___   ___ | |_  | |    ___   __ _  __| | ___ _ __ \n");
+    uart_printf("|  _ \\ / _ \\ / _ \\| __| | |   / _ \\ / _` |/ _` |/ _ \\ '__|\n");
+    uart_printf("| |_) | (_) | (_) | |_  | |__| (_) | (_| | (_| |  __/ |   \n");
+    uart_printf("|____/ \\___/ \\___/ \\__| |_____\\___/ \\__,_|\\__,_|\\___|_|   \n\n");
 }
 
 void shell_read(char *cmd)
 {
 restart:
-    uart_printf("\r# ");
+    uart_printf("\rold# ");
     int idx = 0, end = 0;
     cmd[0] = '\0';
 
@@ -120,7 +122,7 @@ restart:
             cmd[idx++] = c;
             cmd[++end] = '\0';
         }
-        uart_printf("\r\e[2K# %s\r\e[%dC", cmd, idx+2);
+        uart_printf("\r\e[2Kold# %s\r\e[%dC", cmd, idx+5);
     }
     uart_printf("\r\n");
 }
@@ -148,6 +150,10 @@ void shell_parse(char *cmd)
         reset(100);
         while(1)
             asm volatile("nop");
+    }
+    else if(strcmp(cmd, "loadimg") == 0)
+    { 
+        init_loadimg();
     }
     else
     {

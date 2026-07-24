@@ -1,7 +1,6 @@
 import argparse
 import os
 import serial
-import numpy as np
 
 parse = argparse.ArgumentParser()
 parse.add_argument("image")
@@ -35,7 +34,7 @@ def main():
     for i in range(chunk_count):
         print(f"\r{i+1}/{chunk_count}", end="", flush=True)
         ser.write(bytecodes[i*per_chunk:(i+1)*per_chunk])
-
+    print("\n")
 if __name__ == "__main__":
     main()
 
