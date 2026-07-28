@@ -46,17 +46,17 @@ void shell_init()
     get_VC_Core_base_address();
 
     
-    uart_printf("\n\n ____              _     _                    _           \n");
-    uart_printf("| __ )  ___   ___ | |_  | |    ___   __ _  __| | ___ _ __ \n");
-    uart_printf("|  _ \\ / _ \\ / _ \\| __| | |   / _ \\ / _` |/ _` |/ _ \\ '__|\n");
-    uart_printf("| |_) | (_) | (_) | |_  | |__| (_) | (_| | (_| |  __/ |   \n");
-    uart_printf("|____/ \\___/ \\___/ \\__| |_____\\___/ \\__,_|\\__,_|\\___|_|   \n\n");
+    uart_printf("\n\n\r ____              _     _                    _           \n");
+    uart_printf("\r| __ )  ___   ___ | |_  | |    ___   __ _  __| | ___ _ __ \n");
+    uart_printf("\r|  _ \\ / _ \\ / _ \\| __| | |   / _ \\ / _` |/ _` |/ _ \\ '__|\n");
+    uart_printf("\r| |_) | (_) | (_) | |_  | |__| (_) | (_| | (_| |  __/ |   \n");
+    uart_printf("\r|____/ \\___/ \\___/ \\__| |_____\\___/ \\__,_|\\__,_|\\___|_|   \n\n");
 }
 
 void shell_read(char *cmd)
 {
 restart:
-    uart_printf("\rold# ");
+    uart_printf("\rbootloader# ");
     int idx = 0, end = 0;
     cmd[0] = '\0';
 
@@ -122,7 +122,7 @@ restart:
             cmd[idx++] = c;
             cmd[++end] = '\0';
         }
-        uart_printf("\r\e[2Kold# %s\r\e[%dC", cmd, idx+5);
+        uart_printf("\r\e[2Kbootloader# %s\r\e[%dC", cmd, idx+12);
     }
     uart_printf("\r\n");
 }
