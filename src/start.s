@@ -23,6 +23,16 @@ clear_bss:
 	b 1b	
 
 clear_done:
+	// enable FP in EL0 and EL1
+	mrs x0, cpacr_el1
+	orr x0, x0, #(3 << 20)
+	msr cpacr_el1, x0
+	isb
+
+	// load exception_table to VBAR_EL2
+	ldr x0, =exception_table
+	msr VBAR_EL2, x0
+
 	// set stack pointer
 	ldr x0, =__stack_top
 	mov sp, x0

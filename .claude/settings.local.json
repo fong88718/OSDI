@@ -13,7 +13,8 @@
       "Read(//tmp/**)",
       "Bash(readelf -x .got C:/Users/m45p9/Desktop/ShareDir/example/osdi2020/bootloader/kernel8.elf)",
       "Bash(find C:/Users/m45p9/Desktop/ShareDir/example/osdi2020 -iname *frame_buffer* -o -iname Makefile)",
-      "Bash(find C:/Users/m45p9/Desktop/ShareDir/example/osdi2020/include -iname *mbox*)"
+      "Bash(find C:/Users/m45p9/Desktop/ShareDir/example/osdi2020/include -iname *mbox*)",
+      "WebFetch(domain:grasslab.github.io)"
     ]
   }
 }

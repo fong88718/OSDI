@@ -5,8 +5,6 @@ SECTIONS
 	.text : 
 	{ 
 		KEEP(*(.text.boot))
-		_start_loadimg_offset = .;
-		*(.text.start_loading)
 		*(.text*) 
 	}
 	.rodata :

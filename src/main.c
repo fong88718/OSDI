@@ -11,6 +11,7 @@ int main()
 {
 	shell_init();
 	char cmd[CMD_SIZE];
+
 	enum shellStatus status = Read;
 	while(1)
 	{
