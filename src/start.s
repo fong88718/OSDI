@@ -33,6 +33,8 @@ clear_done:
 	ldr x0, =exception_table
 	msr VBAR_EL2, x0
 
+	
+
 	// set stack pointer
 	ldr x0, =__stack_top
 	mov sp, x0
