@@ -4,6 +4,7 @@
 #include "util.h"
 #include "mailbox.h"
 #include "frame_buffer.h"
+#include "timer.h"
 
 enum ANSI_ESC {
     Unknown,
@@ -42,11 +43,11 @@ void shell_init()
     // Initialize uart
     uart_init();
     uart_flush();
-    uart_printf("\n[%f] Init PL011 UART done", getTimeStamp());
+    uart_printf("\n\r[%f] Init PL011 UART done", getTimeStamp());
 
     // Initialize Frame Buffer
     fb_init();
-    uart_printf("\n[%f] Init Frame Buffer done", getTimeStamp());
+    uart_printf("\n\r[%f] Init Frame Buffer done", getTimeStamp());
     
     // Welcome Messages
     fb_splash();
@@ -136,7 +137,7 @@ restart:
 void shell_parse(char *cmd)
 {
     if(strcmp(cmd, "hello") == 0)
-        uart_printf("Hello World!\n");
+        uart_printf("\rHello World!\n");
     else if(strcmp(cmd, "help") == 0)
     {
         uart_printf("\rcommand      | description\n");
@@ -160,6 +161,13 @@ void shell_parse(char *cmd)
     else if(strcmp(cmd, "exc") == 0)
     {
         asm volatile("svc #1");
+    }
+    else if(strcmp(cmd, "irq") == 0)
+    {
+        core_timer_enable();
+        local_timer_init();
+        sys_timer_init();
+        arm_timer_init();
     }
     else
     {

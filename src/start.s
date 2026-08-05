@@ -33,7 +33,13 @@ clear_done:
 	ldr x0, =exception_table
 	msr VBAR_EL2, x0
 
-	
+	// set HCR_EL2.IMO
+	mrs x0, HCR_EL2
+	orr x0, x0, #(1 << 4)
+	msr HCR_EL2, x0
+
+	// clear PSTATE.DAIF
+	msr DAIFclr, #2
 
 	// set stack pointer
 	ldr x0, =__stack_top

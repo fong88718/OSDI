@@ -1,9 +1,23 @@
-.section .text
 #include "exception_table.h"
 
 // Simple vector table
 .align 11 // vector table should be aligned to 0x800
 .global exception_table
+
+.macro E_handler_entry type
+    save_all
+    mov x0, #\type
+    mrs x1, ELR_EL2
+    mrs x2, ESR_EL2
+    bl show_exception_status
+    load_all
+    eret
+.endm
+
+.macro ventry label
+    b \label
+    .align 7
+.endm
 
 .macro save_all
     sub sp, sp, 32 * 8
@@ -24,6 +38,7 @@
     stp x28, x29, [sp ,16 * 14]
     str x30, [sp, 16 * 15]
 .endm
+
     // load general registers from stack
 .macro load_all
     ldp x0, x1, [sp ,16 * 0]
@@ -43,50 +58,80 @@
     ldp x28, x29, [sp ,16 * 14]
     ldr x30, [sp, 16 * 15]
     add sp, sp, 32 * 8
-    eret
 .endm
 
+.section .text
+
+.align 11
+.global exception_table
+
 exception_table:
-  b exception_handler // branch to a handler function.
-  .align 7 // entry size is 0x80, .align will pad 0
-  b exception_handler
-  .align 7
-  b exception_handler
-  .align 7
-  b exception_handler
-  .align 7
+    ventry L_SYNC_CURRENT_SP0
+    ventry L_IRQ_CURRENT_SP0
+    ventry L_FIQ_CURRENT_SP0
+    ventry L_SERROR_CURRENT_SP0
 
-  save_all
-  bl required_1
-  load_all
-  .align 7
-  b exception_handler
-  .align 7
-  b exception_handler
-  .align 7
-  b exception_handler
-  .align 7
+    ventry L_SYNC_CURRENT_SPX
+    ventry L_IRQ_CURRENT_SPX
+    ventry L_FIQ_CURRENT_SPX
+    ventry L_SERROR_CURRENT_SPX
 
-  b exception_handler
-  .align 7
-  b exception_handler
-  .align 7
-  b exception_handler
-  .align 7
-  b exception_handler
-  .align 7
+    ventry L_SYNC_LOWER_AARCH64
+    ventry L_IRQ_LOWER_AARCH64
+    ventry L_FIQ_LOWER_AARCH64
+    ventry L_SERROR_LOWER_AARCH64
 
-  b exception_handler
-  .align 7
-  b exception_handler
-  .align 7
-  b exception_handler
-  .align 7
-  b exception_handler
-  .align 7
+    ventry L_SYNC_LOWER_AARCH32
+    ventry L_IRQ_LOWER_AARCH32
+    ventry L_FIQ_LOWER_AARCH32
+    ventry L_SERROR_LOWER_AARCH32
 
-  exception_handler:
-    wfe
-    b exception_handler
 
+L_SYNC_CURRENT_SP0:
+    E_handler_entry SYNC_CURRENT_SP0
+L_IRQ_CURRENT_SP0:
+    E_handler_entry IRQ_CURRENT_SP0
+L_FIQ_CURRENT_SP0:
+    E_handler_entry FIQ_CURRENT_SP0
+L_SERROR_CURRENT_SP0:
+    E_handler_entry SERROR_CURRENT_SP0
+
+L_SYNC_CURRENT_SPX:
+    b SYNC_CURRENT_SPX_HANDLER
+L_IRQ_CURRENT_SPX:
+    save_all
+    bl IRQ_handler
+    load_all
+    eret
+L_FIQ_CURRENT_SPX:
+    E_handler_entry FIQ_CURRENT_SPX
+L_SERROR_CURRENT_SPX:
+    E_handler_entry SERROR_CURRENT_SPX
+
+L_SYNC_LOWER_AARCH64:
+    E_handler_entry SYNC_LOWER_AARCH64
+L_IRQ_LOWER_AARCH64:
+    E_handler_entry IRQ_LOWER_AARCH64
+L_FIQ_LOWER_AARCH64:
+    E_handler_entry FIQ_LOWER_AARCH64
+L_SERROR_LOWER_AARCH64:
+    E_handler_entry SERROR_LOWER_AARCH64
+
+L_SYNC_LOWER_AARCH32:
+    E_handler_entry SYNC_LOWER_AARCH32
+L_IRQ_LOWER_AARCH32:
+    E_handler_entry IRQ_LOWER_AARCH32
+L_FIQ_LOWER_AARCH32:
+    E_handler_entry FIQ_LOWER_AARCH32
+L_SERROR_LOWER_AARCH32:
+    E_handler_entry SERROR_LOWER_AARCH32
     
+
+SYNC_CURRENT_SPX_HANDLER:
+    save_all
+    mrs x1, ELR_EL2
+    mrs x2, ESR_EL2
+    bl sync_exception_handler
+    load_all
+    eret
+
