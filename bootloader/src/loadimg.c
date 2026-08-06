@@ -1,7 +1,7 @@
 #include "loadimg.h"
 #include "uart0.h"
 
-static enum ANSI_ESC {
+enum ANSI_ESC {
     Unknown,
     CursorForward,
     CursorBackward,
@@ -157,7 +157,7 @@ void init_loadimg()
     }
     if(check_sum != 0)
     {
-        uart_printf("load image failed!\n");
+        uart_printf("\rload image failed!\n");
         return;
     }
     void (*start_os)(void) = (void*)kernel;

@@ -47,8 +47,16 @@ void core_timer_enable()
 void core_timer_handler()
 {
     static int jiffies1 = 0;
-    uart_printf("\rcore timer interrupt, jiffies %d\n", jiffies1++);
+    
     asm volatile("msr cntp_tval_el0, %0" :: "r"(EXPIRE_PERIOD));
+    uart_printf("\rcore timer interrupt, jiffies %d\n", jiffies1++);
+
+    // bottom half simulation
+    
+    // asm volatile("msr DAIFclr, #2"); // enable irq
+    // volatile unsigned long long  x = 0;
+    // while(x++ < 10000000);
+        
 }
 
 void local_timer_init()
@@ -61,8 +69,11 @@ void local_timer_init()
 void local_timer_handler()
 {
     static int jiffies2 = 0;
-    uart_printf("\rlocal timer interrupt, jiffies %d\n", jiffies2++);
     *LOCAL_TIMER_IRQ_CLR =  0xc0000000; // clear interrupt and reload.
+
+    
+
+    uart_printf("\rlocal timer interrupt, jiffies %d\n", jiffies2++);
 }
 
 void IRQ_handler()

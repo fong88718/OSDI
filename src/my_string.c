@@ -143,7 +143,7 @@ char* hextoa(unsigned int arg, char *buf)
         buf[7-i] = tmp;
     }
     *p = 0;
-    while(buf != 0 && *buf == '0')
+    while(*buf == '0' && *(buf + 1) != 0)
         buf++;
     return buf;
 }

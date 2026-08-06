@@ -26,7 +26,7 @@ void get_VC_Core_base_address()
     mailbox[1] = REQUEST_CODE; 
     // tags begin
     mailbox[2] = GET_VC_CORE_BASE_ADDRESS; // tag identifier
-    mailbox[3] = 4; // maximum of request and response value buffer's length.
+    mailbox[3] = 8; // maximum of request and response value buffer's length.
     mailbox[4] = TAG_REQUEST_CODE;
     mailbox[5] = 0; // value buffer, base address in bytes
     mailbox[6] = 0; // value buffer, size in bytes

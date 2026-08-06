@@ -2,7 +2,6 @@
 
 // Simple vector table
 .align 11 // vector table should be aligned to 0x800
-.global exception_table
 
 .macro E_handler_entry type
     save_all
@@ -20,7 +19,7 @@
 .endm
 
 .macro save_all
-    sub sp, sp, 32 * 8
+    sub sp, sp, 34 * 8
     stp x0, x1, [sp ,16 * 0]
     stp x2, x3, [sp ,16 * 1]
     stp x4, x5, [sp ,16 * 2]
@@ -37,10 +36,22 @@
     stp x26, x27, [sp ,16 * 13]
     stp x28, x29, [sp ,16 * 14]
     str x30, [sp, 16 * 15]
+    
+    mrs x0, ELR_EL2
+    mrs x1, SPSR_EL2
+    stp x0, x1, [sp, 16 * 16]
 .endm
 
     // load general registers from stack
 .macro load_all
+    // 防止復原的時候被interrupt
+    msr DAIFset, #2
+    isb
+
+    ldp x0, x1, [sp ,16 * 16]
+    msr ELR_EL2, x0
+    msr SPSR_EL2, x1
+
     ldp x0, x1, [sp ,16 * 0]
     ldp x2, x3, [sp ,16 * 1]
     ldp x4, x5, [sp ,16 * 2]
@@ -57,7 +68,7 @@
     ldp x26, x27, [sp ,16 * 13]
     ldp x28, x29, [sp ,16 * 14]
     ldr x30, [sp, 16 * 15]
-    add sp, sp, 32 * 8
+    add sp, sp, 34 * 8
 .endm
 
 .section .text

@@ -38,7 +38,7 @@ clear_done:
 	orr x0, x0, #(1 << 4)
 	msr HCR_EL2, x0
 
-	// clear PSTATE.DAIF
+	// enable irq interrupt
 	msr DAIFclr, #2
 
 	// set stack pointer
