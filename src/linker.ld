@@ -30,3 +30,4 @@ SECTIONS
 	__stack_top = .;
 	_end = .;
 }
+__user_stack_top = 0x1000;

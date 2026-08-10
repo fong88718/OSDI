@@ -6,8 +6,8 @@
 .macro E_handler_entry type
     save_all
     mov x0, #\type
-    mrs x1, ELR_EL2
-    mrs x2, ESR_EL2
+    mrs x1, ELR_EL1
+    mrs x2, ESR_EL1
     bl show_exception_status
     load_all
     eret
@@ -37,8 +37,8 @@
     stp x28, x29, [sp ,16 * 14]
     str x30, [sp, 16 * 15]
     
-    mrs x0, ELR_EL2
-    mrs x1, SPSR_EL2
+    mrs x0, ELR_EL1
+    mrs x1, SPSR_EL1
     stp x0, x1, [sp, 16 * 16]
 .endm
 
@@ -49,8 +49,8 @@
     isb
 
     ldp x0, x1, [sp ,16 * 16]
-    msr ELR_EL2, x0
-    msr SPSR_EL2, x1
+    msr ELR_EL1, x0
+    msr SPSR_EL1, x1
 
     ldp x0, x1, [sp ,16 * 0]
     ldp x2, x3, [sp ,16 * 1]
@@ -120,9 +120,12 @@ L_SERROR_CURRENT_SPX:
     E_handler_entry SERROR_CURRENT_SPX
 
 L_SYNC_LOWER_AARCH64:
-    E_handler_entry SYNC_LOWER_AARCH64
+    b SYNC_CURRENT_SPX_HANDLER
 L_IRQ_LOWER_AARCH64:
-    E_handler_entry IRQ_LOWER_AARCH64
+    save_all
+    bl IRQ_handler
+    load_all
+    eret
 L_FIQ_LOWER_AARCH64:
     E_handler_entry FIQ_LOWER_AARCH64
 L_SERROR_LOWER_AARCH64:
@@ -140,8 +143,8 @@ L_SERROR_LOWER_AARCH32:
 
 SYNC_CURRENT_SPX_HANDLER:
     save_all
-    mrs x1, ELR_EL2
-    mrs x2, ESR_EL2
+    mrs x1, ELR_EL1
+    mrs x2, ESR_EL1
     bl sync_exception_handler
     load_all
     eret

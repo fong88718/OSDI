@@ -164,13 +164,14 @@ void shell_parse(char *cmd)
     }
     else if(strcmp(cmd, "irq") == 0)
     {
-        core_timer_enable();
-        local_timer_init();
-        sys_timer_init();
-        arm_timer_init();
+        asm volatile("svc #2");
+    }
+    else if(strcmp(cmd, "show") == 0)
+    {
+        asm volatile("svc #3");
     }
     else
     {
-        uart_printf("ERR : command \"%s\" not found, try <help>\n", cmd);
+        uart_printf("\rERR : command \"%s\" not found, try <help>\n", cmd);
     } 
 }
