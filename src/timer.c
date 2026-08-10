@@ -71,23 +71,6 @@ void local_timer_handler()
     static int jiffies2 = 0;
     *LOCAL_TIMER_IRQ_CLR =  0xc0000000; // clear interrupt and reload.
 
-    
-
     uart_printf("\rlocal timer interrupt, jiffies %d\n", jiffies2++);
 }
 
-void IRQ_handler()
-{
-    unsigned int src = *CORE0_INTERRUPT_SOURCE;
-    if(src & (1 << 11))
-        local_timer_handler();
-    if(src & (1 << 1))
-        core_timer_handler();
-    if(src & (1 << 8))
-    {
-        if(*SYSTEM_TIMER_CS & (1 << 1))
-            sys_timer_handler();
-        if(*IRQ_PENDING0 & (1 << 0))
-            arm_timer_hanler();
-    }
-}

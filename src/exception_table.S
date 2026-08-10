@@ -108,24 +108,18 @@ L_SERROR_CURRENT_SP0:
     E_handler_entry SERROR_CURRENT_SP0
 
 L_SYNC_CURRENT_SPX:
-    b SYNC_CURRENT_SPX_HANDLER
+    b SYNC_HANDLER
 L_IRQ_CURRENT_SPX:
-    save_all
-    bl IRQ_handler
-    load_all
-    eret
+    b IRQ_HANDLER
 L_FIQ_CURRENT_SPX:
     E_handler_entry FIQ_CURRENT_SPX
 L_SERROR_CURRENT_SPX:
     E_handler_entry SERROR_CURRENT_SPX
 
 L_SYNC_LOWER_AARCH64:
-    b SYNC_CURRENT_SPX_HANDLER
+    b SYNC_HANDLER
 L_IRQ_LOWER_AARCH64:
-    save_all
-    bl IRQ_handler
-    load_all
-    eret
+    b IRQ_HANDLER
 L_FIQ_LOWER_AARCH64:
     E_handler_entry FIQ_LOWER_AARCH64
 L_SERROR_LOWER_AARCH64:
@@ -141,11 +135,17 @@ L_SERROR_LOWER_AARCH32:
     E_handler_entry SERROR_LOWER_AARCH32
     
 
-SYNC_CURRENT_SPX_HANDLER:
+SYNC_HANDLER:
     save_all
     mrs x1, ELR_EL1
     mrs x2, ESR_EL1
     bl sync_exception_handler
+    load_all
+    eret
+
+IRQ_HANDLER:
+    save_all
+    bl IRQ_handler
     load_all
     eret
 

@@ -23,14 +23,14 @@
 #define ARM_TIMER_LOAD              ((volatile unsigned int*)(MMIO_BASE + INTERRUPT_BASE + 0x400)) 
 #define ARM_TIMER_CONTROL           ((volatile unsigned int*)(MMIO_BASE + INTERRUPT_BASE + 0x408)) 
 #define ARM_TIMER_IRQ_CLR           ((volatile unsigned int*)(MMIO_BASE + INTERRUPT_BASE + 0x40c)) 
-#define IRQ_ENABLE2                 ((volatile unsigned int*)(MMIO_BASE + INTERRUPT_BASE + 0x218)) 
+#define IRQ_ENABLE2                 ((volatile unsigned int*)(MMIO_BASE + INTERRUPT_BASE + 0x214))
 #define IRQ_PENDING0                ((volatile unsigned int*)(MMIO_BASE + INTERRUPT_BASE + 0x200))  
+#define IRQ_PENDING2                ((volatile unsigned int*)(MMIO_BASE + INTERRUPT_BASE + 0x208))  
 
 void local_timer_init();
 void local_timer_handler();
 void core_timer_enable();
 void core_timer_handler();
-void IRQ_handler();
 void sys_timer_init();
 void sys_timer_handler();
 void arm_timer_init();

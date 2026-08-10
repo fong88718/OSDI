@@ -23,10 +23,6 @@ clear_bss:
 	b 1b	
 
 clear_done:
-	// set stack pointer
-	ldr x0, =__stack_top
-	mov sp, x0
-
 	// 允許 EL0 讀 CNTPCT/CNTFRQ,否則 getTimeStamp 會 trap
     mrs x0, CNTKCTL_EL1
     orr x0, x0, #1            // EL0PCTEN = 1 (bit0)
@@ -38,52 +34,49 @@ clear_done:
 	msr cpacr_el1, x0
 	isb
 
-	// load exception_table to VBAR_EL2
-	ldr x0, =exception_table
-	msr VBAR_EL2, x0
-
-	// set HCR_EL2.IMO to routing exception to EL2
-	// mrs x0, HCR_EL2
-	// orr x0, x0, #(1 << 4)
-	// msr HCR_EL2, x0
-
-	// set HCR_EL2.RW to specify EL1 is running at aarch64
+	// set HCR_EL2.RW to specify EL1 running at aarch64
 	mrs x0, HCR_EL2
 	orr x0, x0, #(1 << 31)
 	msr HCR_EL2, x0
 
-	mov x0, #0x3c5 // EL1h (SPSel = 1) with interrupt disabled
+	// EL1h (SPSel = 1) with interrupt disabled
+	mov x0, #0x3c5 
 	msr SPSR_EL2, x0 
-	adr x0, rest_initialization // load exception return address
-	msr elr_el2, x0
-	adr x0, __stack_top // init sp for el1 option 1
-	msr sp_el1, x0
-	eret // return to EL1
 
-rest_initialization:
+	// load exception return address
+	adr x0, EL1_start 
+	msr elr_el2, x0
+
+	// return to EL1
+	eret 
+
+EL1_start:
+	// init sp for el1
+	mov sp, #0x80000
+
+	// set exception table
 	ldr x0, =exception_table
 	msr VBAR_EL1, x0
-
 
 	// enable irq interrupt
 	msr DAIFclr, #2
 
-	
+	// EL0 with interrupt enabled
+	mov x0, 0 
+	msr spsr_el1, x0
 
-	// jump to main function in c
-	bl from_el1_to_el0
+	// load exception return address
+	ldr x0, =EL0_start
+	msr ELR_EL1, x0
+
+	// switch to EL0
+	eret
 	// halt this core if return
 	b secondary
 	
 
-from_el1_to_el0:
-
-	ldr x0, =__user_stack_top
-	msr sp_el0, x0
-	mov x0, 0 // EL0 with interrupt enabled
-	msr spsr_el1, x0
-	adr x0, main // return to shell run in EL0
-	msr elr_el1, x0
-	eret
-
-
+EL0_start:
+	// set stack pointer
+	mov sp, #0x60000
+	bl main
+	b secondary

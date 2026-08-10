@@ -166,10 +166,6 @@ void shell_parse(char *cmd)
     {
         asm volatile("svc #2");
     }
-    else if(strcmp(cmd, "show") == 0)
-    {
-        asm volatile("svc #3");
-    }
     else
     {
         uart_printf("\rERR : command \"%s\" not found, try <help>\n", cmd);

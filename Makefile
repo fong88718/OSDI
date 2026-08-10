@@ -30,7 +30,7 @@ $(OUT_DIR)/%.o: $(SRC_DIR)/%.c | $(OUT_DIR)
 $(OUT_DIR)/%.o: $(SRC_DIR)/%.S | $(OUT_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OUT_DIR)/%.o: $(SRC_DIR)/%.s | $(OUT_DIR)
+$(OUT_DIR)/%.o: $(SRC_DIR)/%.s  | $(OUT_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 kernel8.img:  $(OBJS) $(ASM_OBJS) $(LINKER_FILE) $(MAKEFILE)

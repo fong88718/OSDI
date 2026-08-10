@@ -3,10 +3,12 @@
 #include "gpio.h"
 #include "my_string.h"
 #include "util.h"
+#include "timer.h"
 
 
+Queue tx_buf, rx_buf;
 
-void uart_init(void) 
+void uart_init(void)
 {
     // disable UART
     *UART0_CR = 0; 
@@ -44,34 +46,48 @@ void uart_init(void)
     *GPPUD = 0;                             // clear register
     *GPPUDCLK0 = 0;                         // clear register
 
-
-
     /* Initialize UART */
     *UART0_IBRD = 0x2;                   // set 115200 Baudrate
     *UART0_FBRD = 0xB;                   // set 115200 Baudrate
-    *UART0_LCRH = 0b11 << 5;             // 8 bit mode
-    *UART0_CR = 1 | (1 << 8) | (1 << 9); // enable, tx, rx
+    *UART0_LCRH = 0b11 << 5;             // 8 bit mode     
+    *UART0_ICR = 0x7FF;                 // clear all pending interrupt
+    *UART0_IMSC = (1 << 4);             // enable rx interrupt 
+    *IRQ_ENABLE2 |= (1 << 25);          // enable gpu uart interrupt
+    *UART0_CR = 1 | (1 << 8) | (1 << 9); // enable tx/rx
 }
+
 
 void uart_send(char c)
 {
-    while((*UART0_FR & (1 << 5))) // tx queue is full
-        asm volatile("nop");
-    *UART0_DR = c;
+    if((*UART0_FR & (1 << 5)) == 0) // tx isn't full
+    {
+        if(queue_empty(&tx_buf))
+            *UART0_DR = c;
+        else
+        {
+            queue_push(&tx_buf, c);
+            *UART0_DR = queue_pop(&tx_buf);
+        }   
+    }
+    else
+    {
+        queue_push(&tx_buf, c);
+        *UART0_IMSC |= (1 << 5);
+    }
 }
 
 char uart_recv_raw(void) 
 {
-    while(*UART0_FR & (1 << 4)) // rx queue is empty
+    while(queue_empty(&rx_buf)) // rx queue is empty
         asm volatile("nop");
-    return (char)*UART0_DR;
+    return queue_pop(&rx_buf);
 }
 
 char uart_recv(void) 
 {
-    while(*UART0_FR & (1 << 4)) // rx queue is empty
+    while(queue_empty(&rx_buf)) // rx queue is empty
         asm volatile("nop");
-    char c = (char)*UART0_DR;
+    char c = queue_pop(&rx_buf);
     return c == '\r' ? '\n' : c;
 }
 
@@ -90,3 +106,5 @@ void uart_printf(char *fmt, ...)
     while(*s != 0)
         uart_send(*s++);
 }
+
+
