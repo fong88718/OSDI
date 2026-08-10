@@ -7,6 +7,7 @@
 
 
 Queue tx_buf, rx_buf;
+volatile int tx_active = 0;
 
 void uart_init(void)
 {
@@ -59,21 +60,14 @@ void uart_init(void)
 
 void uart_send(char c)
 {
-    if((*UART0_FR & (1 << 5)) == 0) // tx isn't full
+    queue_push(&tx_buf, c);
+
+    if(tx_active == 0) // send first byte
     {
-        if(queue_empty(&tx_buf))
-            *UART0_DR = c;
-        else
-        {
-            queue_push(&tx_buf, c);
-            *UART0_DR = queue_pop(&tx_buf);
-        }   
-    }
-    else
-    {
-        queue_push(&tx_buf, c);
+        tx_active = 1;
+        *UART0_DR = queue_pop(&tx_buf);
         *UART0_IMSC |= (1 << 5);
-    }
+    }    
 }
 
 char uart_recv_raw(void) 

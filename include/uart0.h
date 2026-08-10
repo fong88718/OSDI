@@ -19,6 +19,7 @@
 
 #define Q_SIZE 1024
 extern Queue tx_buf, rx_buf;
+extern volatile int tx_active;
 
 void uart_init(void);
 void uart_send(char c);

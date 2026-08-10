@@ -89,7 +89,7 @@ void uart0_irq_handler()
     unsigned int mis = *UART0_MIS;
     if(mis & (1 << 4)) // rx interrupt
     {
-        while((*UART0_FR & (1 << 4)) == 0) // rx FIFO isn't empty
+        while((*UART0_FR & (1 << 4)) == 0 )// rx FIFO isn't empty 
         {
             char c = *UART0_DR;
             queue_push(&rx_buf, c);
@@ -97,9 +97,10 @@ void uart0_irq_handler()
     }
     if(mis & (1 << 5)) // tx interrupt
     {
-        while(!queue_empty(&tx_buf)) // 還有資料要傳
+        while(!queue_empty(&tx_buf) && (*UART0_FR & (1<<5)) == 0) // 還有資料要傳 and tx FIFO isn't full
             *UART0_DR = queue_pop(&tx_buf);
         
+        tx_active = 0; // 送完
         *UART0_IMSC &= ~(1 << 5); // disable tx interrupt
     }
 }
